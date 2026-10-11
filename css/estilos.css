@@ -1,0 +1,370 @@
+* { 
+  box-sizing: border-box; 
+}
+
+:root {
+  --color-brown: #78350F;        /* Marrón café principal */
+  --color-brown-dark: #582408;   /* Marrón oscuro para hover */
+  --color-cream: #FEF3C7;        /* Crema suave para detalles y texto */
+  --color-cream-bg: #FDF7E2;     /* Fondo crema de secciones y tarjetas */
+  --color-green: #3F6212;        /* Verde oliva para acentos y precios */
+  --color-green-dark: #2C450C;   /* Verde oliva oscuro */
+  --color-text-dark: #3B1B05;    /* Texto general */
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--color-cream);
+  color: var(--color-text-dark);
+  
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ============ APP BAR GRANDE CON LOGO DESTACADO ============ */
+.appbar {
+  background-color: var(--color-brown);
+  color: var(--color-cream);
+  padding: 1.25rem 2rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* Logo izquierda | Texto centro | Estado derecha */
+  align-items: center;
+  width: 100%;
+  min-height: 140px; /* Más alto para acomodar el logo grande */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.appbar__logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.appbar__logo {
+  height: 110px;            /* Tamaño ampliado del logo */
+  width: 110px;
+  object-fit: cover;
+  border-radius: 20px;      /* Esquinas redondeadas adaptadas al nuevo tamaño */
+  border: 3px solid var(--color-cream);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+}
+
+.appbar__center {
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.appbar h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--color-cream);
+  letter-spacing: 0.5px;
+}
+
+.appbar__slogan {
+  margin: 0.25rem 0 0 0;
+  font-size: 1rem;
+  color: #E2ECB8;
+  font-weight: 500;
+}
+
+.appbar__right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Ajuste responsive para celulares */
+@media (max-width: 600px) {
+  .appbar {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    text-align: center;
+    padding: 1rem;
+  }
+  
+  .appbar__logo-container, .appbar__right {
+    justify-content: center;
+  }
+
+  .appbar__logo {
+    height: 90px;
+    width: 90px;
+  }
+
+  .appbar h1 {
+    font-size: 1.4rem;
+  }
+}
+
+/* Píldora de estado de conexión */
+.pill {
+  background: var(--color-green);
+  color: var(--color-cream);
+  border: 1px solid var(--color-cream);
+  border-radius: 999px;
+  padding: .35rem .85rem;
+  font-size: .85rem;
+  font-weight: 600;
+}
+
+.pill.sin-conexion { 
+  background: #B91C1C; 
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+}
+
+/* ============ CONTENIDO PRINCIPAL ============ */
+main {
+  width: 100%;
+  max-width: 760px;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+  flex: 1 0 auto; /* Empuja el footer hasta el fondo de la pantalla */
+}
+
+section {
+  background-color: #FFFFFF;
+  border: 2px solid var(--color-brown);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(120, 53, 15, 0.08);
+}
+
+section h2 {
+  color: var(--color-brown);
+  margin-top: 0;
+  margin-bottom: 1.2rem;
+  border-bottom: 2px dashed var(--color-green);
+  padding-bottom: .5rem;
+  font-size: 1.4rem;
+}
+
+/* ============ CATÁLOGO Y TARJETAS ============ */
+.grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.producto {
+  background-color: var(--color-cream-bg);
+  border: 1.5px solid var(--color-brown);
+  border-radius: 10px;
+  padding: .9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.producto:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(120, 53, 15, 0.15);
+}
+
+.producto__foto {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: .6rem;
+  background-color: var(--color-cream);
+  border: 1px solid rgba(120, 53, 15, 0.2);
+}
+
+.producto strong { 
+  display: block; 
+  margin-bottom: .25rem; 
+  color: var(--color-brown);
+  font-size: 1.05rem;
+}
+
+.producto p {
+  color: #553C22;
+  margin: 0 0 .5rem 0;
+  font-size: 0.88rem;
+}
+
+.producto .precio { 
+  background-color: var(--color-green);
+  color: var(--color-cream);
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 1rem;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+/* Botones generales */
+button {
+  background-color: var(--color-brown);
+  color: var(--color-cream);
+  border: none;
+  border-radius: 8px;
+  padding: .65rem 1rem;
+  cursor: pointer;
+  font-size: .9rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+button:hover { 
+  background-color: var(--color-brown-dark);
+}
+
+/* Tarjetas esqueleto (cargando) */
+.producto--cargando {
+  background-color: #EFE6CD;
+}
+.producto--cargando strong,
+.producto--cargando .precio,
+.producto--cargando p {
+  background: #E2D5B1;
+  border-radius: 4px;
+  color: transparent;
+}
+.producto--cargando strong { width: 70%; }
+.producto--cargando .precio { display: inline-block; width: 30%; }
+.producto--cargando p { width: 45%; }
+.producto--cargando button { visibility: hidden; }
+
+/* ============ CARRITO Y UBICACIÓN ============ */
+#carrito-lista { 
+  list-style: none; 
+  padding: 0; 
+  margin: 0;
+}
+
+#carrito-lista li {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: .6rem;
+  border-bottom: 1px dashed var(--color-brown);
+  padding: .6rem 0;
+}
+
+.carrito-nombre { 
+  font-weight: 600; 
+  color: var(--color-brown);
+}
+
+.carrito-cantidad {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+.carrito-cantidad button {
+  padding: .2rem .6rem;
+  font-size: .95rem;
+  line-height: 1;
+  background-color: var(--color-brown);
+  width: auto;
+}
+
+.carrito-cantidad__valor {
+  min-width: 1.4rem;
+  text-align: center;
+  font-weight: 700;
+  color: var(--color-brown);
+}
+
+.carrito-precio { 
+  font-weight: 800; 
+  color: var(--color-green); 
+  white-space: nowrap; 
+}
+
+.carrito-quitar {
+  background: transparent;
+  color: #991B1B;
+  border: 1px solid #B91C1C;
+  padding: .25rem .6rem;
+  font-size: .8rem;
+  width: auto;
+}
+.carrito-quitar:hover { 
+  background: #FEE2E2; 
+}
+
+.mensaje, .sucursal-info { 
+  color: var(--color-brown); 
+  font-size: .95rem; 
+}
+
+.mapa {
+  height: 260px;
+  border-radius: 8px;
+  margin-top: .75rem;
+  border: 2px solid var(--color-brown);
+}
+
+/* ============ FOOTER 100% ANCHO Y HASTA ABAJO ============ */
+footer {
+  background-color: var(--color-brown);
+  color: var(--color-cream);
+  text-align: center;
+  padding: 1.5rem 1rem;
+  margin-top: auto;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.footer-titulo {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 0.35rem 0;
+  color: var(--color-cream);
+}
+
+.footer-info {
+  font-size: 0.85rem;
+  margin: 0;
+  color: #E2ECB8;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 600px) {
+  .appbar {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    text-align: center;
+    padding: 1rem;
+  }
+  
+  .appbar__logo-container, .appbar__right {
+    justify-content: center;
+  }
+
+  .appbar__logo {
+    height: 75px;
+    width: 75px;
+  }
+
+  .appbar h1 {
+    font-size: 1.4rem;
+  }
+
+  #carrito-lista li { 
+    grid-template-columns: 1fr auto; 
+    grid-template-areas: "nombre nombre" "cantidad precio" "quitar quitar"; 
+  }
+  .carrito-nombre { grid-area: nombre; }
+  .carrito-cantidad { grid-area: cantidad; }
+  .carrito-precio { grid-area: precio; justify-self: end; }
+  .carrito-quitar { grid-area: quitar; justify-self: start; }
+}
