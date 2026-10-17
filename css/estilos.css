@@ -368,3 +368,51 @@ footer {
   .carrito-precio { grid-area: precio; justify-self: end; }
   .carrito-quitar { grid-area: quitar; justify-self: start; }
 }
+
+/* ============ FILTROS DE CATEGORÍA ============ */
+.categorias-filtro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.btn-filtro {
+  background-color: var(--color-cream-bg);
+  color: var(--color-brown);
+  border: 1.5px solid var(--color-brown);
+  border-radius: 20px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: auto; /* Para que no ocupe el 100% como los botones normales */
+  transition: all 0.2s ease;
+}
+
+.btn-filtro:hover {
+  background-color: var(--color-cream);
+  color: var(--color-brown-dark);
+}
+
+.btn-filtro.active {
+  background-color: var(--color-brown);
+  color: var(--color-cream);
+  border-color: var(--color-brown);
+}
+
+/* Títulos de Categoría cuando se muestran todas */
+.categoria-titulo {
+  grid-column: 1 / -1;
+  color: var(--color-brown);
+  font-size: 1.2rem;
+  font-weight: 700;
+  border-bottom: 2px solid var(--color-green);
+  padding-bottom: 0.3rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.categoria-titulo:first-child {
+  margin-top: 0;
+}

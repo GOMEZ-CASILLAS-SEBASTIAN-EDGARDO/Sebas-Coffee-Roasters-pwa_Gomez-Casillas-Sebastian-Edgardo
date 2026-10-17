@@ -46,12 +46,13 @@
     <!-- ---- Sección 1: Catálogo (CSR) ---- -->
     <section>
       <h2>Catálogo</h2>
-      <!-- Este div empieza VACÍO a propósito: si ves el código fuente (Ctrl+U)
-           no verás ningún producto aquí. JavaScript (csr.js) lo llena DESPUÉS
-           de que la página ya cargó: por eso es "Renderizado en el Cliente" (CSR). -->
-      <!-- Mientras llegan los datos, 4 tarjetas "esqueleto" (una por producto de
-           catalogo.json) apartan el espacio: así el Carrito no "brinca" hacia
-           abajo cuando csr.js dibuja los productos (Lighthouse lo mide como CLS). -->
+      <!-- Filtros por categoría -->
+      <div class="categorias-filtro">
+        <button type="button" class="btn-filtro active" data-categoria="todas">Todas</button>
+        <button type="button" class="btn-filtro" data-categoria="Café Caliente">☕ Café Caliente</button>
+        <button type="button" class="btn-filtro" data-categoria="Bebidas Frías">🧊 Bebidas Frías</button>
+        <button type="button" class="btn-filtro" data-categoria="Delicias Horneadas">🥐 Delicias Horneadas</button>
+      </div>
       <div id="catalogo" class="grid" aria-busy="true" aria-label="Cargando catálogo">
         <div class="producto producto--cargando" aria-hidden="true">
           <div class="producto__foto"></div>
