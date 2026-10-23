@@ -4,11 +4,12 @@
 
 // Variable global para almacenar los productos recibidos del catalogo.json
 let productosGlobales = [];
+let categoriaActiva = "todas";
 
 // 1) Buscamos el contenedor vacío que dejamos en index.html
 const contenedorCatalogo = document.getElementById("catalogo");
 
-// Función para normalizar texto (elimina diferencias de mayúsculas, acentos y espacios)
+// Función para normalizar texto (evita fallos por mayúsculas, acentos o espacios)
 function normalizarTexto(texto) {
   if (!texto) return "";
   return texto
@@ -18,8 +19,8 @@ function normalizarTexto(texto) {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-// Función principal para renderizar los productos
-function renderizarProductos(categoriaSeleccionada = "todas") {
+// Función que dibuja el catálogo en pantalla filtrando por la categoría seleccionada
+function renderizarCatalogo() {
   if (!contenedorCatalogo) return;
 
   contenedorCatalogo.innerHTML = "";
@@ -27,62 +28,54 @@ function renderizarProductos(categoriaSeleccionada = "todas") {
   contenedorCatalogo.removeAttribute("aria-label");
 
   if (productosGlobales.length === 0) {
-    contenedorCatalogo.innerHTML = "<p class='mensaje'>No hay productos disponibles.</p>";
+    contenedorCatalogo.innerHTML = "<p>No hay productos disponibles.</p>";
     return;
   }
 
-  // Obtenemos las categorías únicas en el orden del JSON
-  const categorias = [...new Set(productosGlobales.map((p) => p.categoria))];
-  const catFiltroNorm = normalizarTexto(categoriaSeleccionada);
+  // Filtrar productos por categoría
+  const filtroNorm = normalizarTexto(categoriaActiva);
+  const productosFiltrados = productosGlobales.filter((producto) => {
+    if (filtroNorm === "todas") return true;
+    
+    const catNorm = normalizarTexto(producto.categoria);
+    return (
+      catNorm === filtroNorm ||
+      (filtroNorm.includes("delicias") && catNorm.includes("acompanar")) ||
+      (filtroNorm.includes("acompanar") && catNorm.includes("delicias"))
+    );
+  });
 
-  categorias.forEach((categoria) => {
-    const catNorm = normalizarTexto(categoria);
+  if (productosFiltrados.length === 0) {
+    contenedorCatalogo.innerHTML = "<p>No hay productos en esta categoría.</p>";
+    return;
+  }
 
-    // Muestra la sección si selecciona "Todas" o si la categoría coincide
-    const coincide =
-      catFiltroNorm === "todas" ||
-      catNorm === catFiltroNorm ||
-      (catFiltroNorm.includes("delicias") && catNorm.includes("acompanar")) ||
-      (catFiltroNorm.includes("acompanar") && catNorm.includes("delicias"));
+  productosFiltrados.forEach((producto) => {
+    // creamos un <div class="producto"> por cada producto, desde JavaScript puro
+    const tarjeta = document.createElement("div");
+    tarjeta.className = "producto";
 
-    if (coincide) {
-      const productosDeCategoria = productosGlobales.filter((p) => p.categoria === categoria);
+    // usamos el propio objeto "producto" para llenar el texto (sin plantillas de servidor)
+    tarjeta.innerHTML = `
+      <img class="producto__foto" src="${producto.imagen}" alt="${producto.nombre}" loading="lazy">
+      <strong>${producto.nombre}</strong>
+      <span class="precio">$${producto.precio}</span>
+      <p>Stock: ${producto.stock}</p>
+      <button type="button" data-id="${producto.id}">Agregar al carrito</button>
+    `;
 
-      if (productosDeCategoria.length > 0) {
-        // Título de la sección
-        const tituloCat = document.createElement("h3");
-        tituloCat.className = "categoria-titulo";
-        tituloCat.textContent = categoria;
-        contenedorCatalogo.appendChild(tituloCat);
+    contenedorCatalogo.appendChild(tarjeta);
 
-        // Insertamos cada tarjeta directamente en el contenedor principal `#catalogo`
-        productosDeCategoria.forEach((producto) => {
-          const tarjeta = document.createElement("div");
-          tarjeta.className = "producto";
-
-          tarjeta.innerHTML = `
-            <img class="producto__foto" src="${producto.imagen}" alt="${producto.nombre}" loading="lazy">
-            <strong>${producto.nombre}</strong>
-            <span class="precio">$${producto.precio}</span>
-            <p>Stock: ${producto.stock}</p>
-            <button type="button" data-id="${producto.id}">Agregar al carrito</button>
-          `;
-
-          // Conexión del botón agregar al carrito
-          tarjeta.querySelector("button").addEventListener("click", () => {
-            if (typeof agregarAlCarrito === "function") {
-              agregarAlCarrito(producto);
-            }
-          });
-
-          contenedorCatalogo.appendChild(tarjeta);
-        });
+    // conectamos el botón recién creado con la función agregarAlCarrito() de carrito.js
+    tarjeta.querySelector("button").addEventListener("click", () => {
+      if (typeof agregarAlCarrito === "function") {
+        agregarAlCarrito(producto);
       }
-    }
+    });
   });
 }
 
-// Escuchamos los clics de los botones de filtro
+// Inicialización de eventos de los botones de filtro
 document.addEventListener("DOMContentLoaded", () => {
   const botonesFiltro = document.querySelectorAll(".btn-filtro");
 
@@ -93,23 +86,25 @@ document.addEventListener("DOMContentLoaded", () => {
       const btnObjetivo = e.target.closest(".btn-filtro");
       btnObjetivo.classList.add("active");
 
-      const categoria = btnObjetivo.getAttribute("data-categoria");
-      renderizarProductos(categoria);
+      categoriaActiva = btnObjetivo.getAttribute("data-categoria") || "todas";
+      renderizarCatalogo();
     });
   });
-
-  // 2) fetch() le pide el archivo catalogo.json al servidor
-  fetch("catalogo.json")
-    .then((respuesta) => respuesta.json())
-    .then((productos) => {
-      // 3) Guardamos y renderizamos
-      productosGlobales = productos;
-      renderizarProductos("todas");
-    })
-    .catch((error) => {
-      contenedorCatalogo.innerHTML = "<p>No se pudo cargar el catálogo. Intenta más tarde.</p>";
-      contenedorCatalogo.removeAttribute("aria-busy");
-      contenedorCatalogo.removeAttribute("aria-label");
-      console.error("Error al cargar catálogo:", error);
-    });
 });
+
+// 2) fetch() le pide el archivo catalogo.json al servidor (aquí simula una API real).
+//    fetch() devuelve una "promesa": un valor que llegará más adelante, no de inmediato.
+fetch("catalogo.json")
+  .then((respuesta) => respuesta.json()) // convierte el texto recibido en un array de objetos JS
+  .then((productos) => {
+    // 3) Ya tenemos los productos: guardamos en variable global y dibujamos
+    productosGlobales = productos;
+    renderizarCatalogo();
+  })
+  .catch((error) => {
+    // si algo falla (por ejemplo, sin conexión y sin caché), avisamos en pantalla
+    contenedorCatalogo.innerHTML = "<p>No se pudo cargar el catálogo. Intenta más tarde.</p>";
+    contenedorCatalogo.removeAttribute("aria-busy");
+    contenedorCatalogo.removeAttribute("aria-label");
+    console.error("Error al cargar catálogo:", error);
+  });
