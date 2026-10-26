@@ -14,7 +14,7 @@
 |---|---|---|
 | 1 | 36a3e05 | 11/10/2026 |
 | 2 | 48dc354 | 18/10/2026 |
-| 3 | (hash del avance 3) | 25/10/2026 |
+| 3 | 9a3ca4a | 25/10/2026 |
 | 4 | (se escribe en el reporte PDF) | 01/11/2026 |
 
 ## Comparación SSR vs CSR
@@ -24,3 +24,11 @@
 
 ### CSR (JavaScript): el div del catálogo llega vacío
 ![Código fuente CSR](docs/captura-csr.png)
+
+## Funciones PWA (avance 3)
+
+### index.html: manifest y registro del Service Worker activos
+![Código fuente index.html](docs/captura-index-pwa.png)
+
+### sw.js: Workbox precachea el catálogo y las fotos
+![Código fuente sw.js](docs/captura-sw.png)

@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Sebas Coffee Roasters",
   "short_name": "Coffee Roasters",
-  "description": "Coffee shop app",
+  "description": "Cafetería de especialidad",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
